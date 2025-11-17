@@ -35,9 +35,6 @@ model Alert {
   user      User     @relation(fields: [userId], references: [id])
   alertTime String
   pollutant String
-  alertLocation String
-  lat       Float
-  lon       Float
   threshold Float
   alertEmail String?
   createdAt DateTime @default(now())

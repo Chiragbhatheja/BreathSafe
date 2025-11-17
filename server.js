@@ -27,6 +27,11 @@ app.use(express.json());
 app.use(compression());
 app.use(cors());
 
+// =======================================================
+// 🟢 CRITICAL FIX: Serve all files from the 'public' directory
+app.use(express.static(PUBLIC_DIR));
+// =======================================================
+
 // --- JWT CONFIG ---
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) {
@@ -377,6 +382,8 @@ app.get('/', async (req, res, next) => {
   const indexPath = path.join(PUBLIC_DIR, indexFileName);
   try {
     await fs.access(indexPath, constants.F_OK);
+    // Since static middleware is added, this manual route can be simplified/removed, 
+    // but leaving it to ensure index.html loads at the root.
     return res.sendFile(indexPath, { maxAge: 0 });
   } catch (err) {
     if (err.code !== 'ENOENT') return next(err);
